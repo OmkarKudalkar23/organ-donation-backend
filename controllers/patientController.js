@@ -105,11 +105,21 @@ export const requestMatch = async (req, res) => {
 export const getOSMHospitals = async (req, res) => {
     try {
         const { lat, lng } = req.query;
+        if (!lat || !lng) {
+            return res.status(400).json({ message: "Latitude and Longitude are required" });
+        }
+        
         const query = `[out:json];node["amenity"="hospital"](around:5000,${lat},${lng});out;`;
         const osmRes = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
+        
+        if (!osmRes.ok) {
+            throw new Error(`OSM API responded with status ${osmRes.status}`);
+        }
+
         const osmData = await osmRes.json();
-        res.json(osmData);
+        res.json(osmData || { elements: [] });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error("OSM Proxy Error:", error);
+        res.status(500).json({ message: error.message, elements: [] });
     }
 };
