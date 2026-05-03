@@ -110,7 +110,11 @@ export const getOSMHospitals = async (req, res) => {
         }
         
         const query = `[out:json];node["amenity"="hospital"](around:5000,${lat},${lng});out;`;
-        const osmRes = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
+        const osmRes = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`, {
+            headers: {
+                'User-Agent': 'ReLifeOrganDonationApp/1.0 (contact: support@relife.com)'
+            }
+        });
         
         if (!osmRes.ok) {
             throw new Error(`OSM API responded with status ${osmRes.status}`);
