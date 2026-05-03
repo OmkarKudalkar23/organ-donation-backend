@@ -4,7 +4,8 @@ import {
     updatePatientProfile, 
     getMatchedDonorsForPatient, 
     getAllHospitals,
-    requestMatch 
+    requestMatch,
+    getOSMHospitals 
 } from '../controllers/patientController.js';
 import protect from '../middleware/authMiddleware.js';
 import roleMiddleware from '../middleware/roleMiddleware.js';
@@ -15,6 +16,7 @@ router.get('/profile', protect, roleMiddleware('patient'), getPatientProfile);
 router.put('/profile', protect, roleMiddleware('patient'), updatePatientProfile);
 router.get('/matched-donors', protect, roleMiddleware('patient'), getMatchedDonorsForPatient);
 router.get('/hospitals', protect, roleMiddleware('patient'), getAllHospitals);
+router.get('/osm-hospitals', protect, roleMiddleware('patient'), getOSMHospitals);
 router.post('/request-match', protect, roleMiddleware('patient'), requestMatch);
 
 export default router;

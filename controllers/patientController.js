@@ -101,3 +101,15 @@ export const requestMatch = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+// @desc Proxy OSM data to avoid CORS
+export const getOSMHospitals = async (req, res) => {
+    try {
+        const { lat, lng } = req.query;
+        const query = `[out:json];node["amenity"="hospital"](around:5000,${lat},${lng});out;`;
+        const osmRes = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
+        const osmData = await osmRes.json();
+        res.json(osmData);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
